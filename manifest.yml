@@ -1,0 +1,36 @@
+modules:
+  jira:projectPage:
+    - key: release-notes-generator-hello-world-project-page
+      resource: main
+      resolver:
+        function: resolver
+      render: native
+      title: Release Notes Generator
+
+  function:
+    - key: resolver
+      handler: index.handler
+
+permissions:
+  scopes:
+    - read:jira-work
+    - write:confluence-content
+    - read:confluence-content.summary
+    - read:space:confluence
+    - write:page:confluence
+  external:
+    fetch:
+      backend:
+        - api.openai.com
+
+resources:
+  - key: main
+    path: src/frontend/index.jsx
+
+app:
+  runtime:
+    name: nodejs24.x
+    memoryMB: 256
+    architecture: arm64
+  id: ari:cloud:ecosystem::app/2ef8450b-7377-4520-bf7d-7274d6e5bd45
+

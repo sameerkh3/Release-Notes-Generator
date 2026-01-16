@@ -1,39 +1,149 @@
-# Forge Hello World
+# Release Notes Generator (Forge)
 
-This project contains a Forge app written in Javascript that displays `Hello World!` in a Jira project page. 
+A private Atlassian Forge app that generates sprint-based release notes from Jira issues and (optionally) creates a Confluence draft page. It uses OpenAI to classify and rewrite release notes.
 
-See [developer.atlassian.com/platform/forge/](https://developer.atlassian.com/platform/forge) for documentation and tutorials explaining Forge.
+---
 
-## Requirements
+## What this app provides
+- **Jira Project Page**: "Release Notes Generator"
+- Fetches **Done** issues from a Sprint
+- Groups issues into release sections
+- Creates a **Confluence draft page**
+- Uses **OpenAI** for summarization and classification
 
-See [Set up Forge](https://developer.atlassian.com/platform/forge/set-up-forge/) for instructions to get set up.
+---
 
-## Quick start
-- Install dependecies
+## Prerequisites
+You will need:
+- **Node.js** (Forge runtime uses `nodejs24.x`, Node 24 recommended)
+- **Atlassian Forge CLI**
+- An Atlassian **site** with Jira (and Confluence if using draft pages)
+- **Site admin** permissions (or access to a site admin)
+- An **OpenAI API key**
+
+### Install Forge CLI
+```bash
+npm install -g @forge/cli
+forge --version
 ```
+
+Login to Forge:
+```bash
+forge login
+```
+
+---
+
+## Clone the repository
+```bash
+git clone <REPOSITORY_URL>
+cd <REPOSITORY_FOLDER>
+```
+
+Install dependencies:
+```bash
 npm install
 ```
-- Modify your app frontend by editing the `src/frontend/index.jsx` file.
 
-- Modify your app backend by editing the `src/resolvers/index.js` file to define resolver functions. See [Forge resolvers](https://developer.atlassian.com/platform/forge/runtime-reference/custom-ui-resolver/) for documentation on resolver functions.
+---
 
-- Build and deploy your app by running:
-```
-forge deploy
-```
+## Register the app
+Each person installing the app must register it under their own Atlassian account.
 
-- Install your app in an Atlassian site by running:
-```
-forge install
+```bash
+forge register
 ```
 
-- Develop your app by running `forge tunnel` to proxy invocations locally:
-```
-forge tunnel
+---
+
+## Configure environment variables
+This app requires an OpenAI API key to be configured as a Forge variable.
+
+Set it for development:
+```bash
+forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment development
 ```
 
-### Notes
-- Use the `forge deploy` command when you want to persist code changes.
-- Use the `forge install` command when you want to install the app on a new site.
-- Once the app is installed on a site, the site picks up the new app changes you deploy without needing to rerun the install command.
+(Optional) If deploying to production later:
+```bash
+forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment production
+```
 
+---
+
+## Deploy the app
+Deploy to the development environment:
+```bash
+forge deploy --environment development
+```
+
+---
+
+## Install the app
+Install the app on your Atlassian site:
+```bash
+forge install --environment development
+```
+
+During installation:
+- Select your Atlassian site
+- Choose Jira (and Confluence if prompted)
+
+After installation, open any **Jira project** and locate **Release Notes Generator** in the project navigation.
+
+---
+
+## Permissions (FYI)
+The app requests the following scopes:
+- `read:jira-work`
+- `write:confluence-content`
+- `read:confluence-content.summary`
+- `read:space:confluence`
+- `write:page:confluence`
+
+External API access:
+- `api.openai.com`
+
+---
+
+## Common issues
+### Missing OpenAI API key
+If you see errors related to OpenAI:
+```bash
+forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment development
+```
+
+### Permission or 401/403 errors
+If scopes were updated in `manifest.yml`:
+1. Redeploy the app
+2. Reinstall the app so permissions are re-approved
+
+### Confluence draft creation issues
+- Ensure Confluence was selected during installation
+- Verify you have access to the target space and parent page
+
+---
+
+## Useful commands
+View logs:
+```bash
+forge logs --environment development
+```
+
+Reinstall or upgrade the app:
+```bash
+forge install --environment development
+```
+
+Deploy to production (optional):
+```bash
+forge deploy --environment production
+forge install --environment production
+```
+
+---
+
+## Notes
+- This app is intended for **internal/private use**
+- OpenAI usage and costs are owned by the installer
+- Do not commit API keys to the repository

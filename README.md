@@ -7,7 +7,7 @@ A private Atlassian Forge app that generates sprint-based release notes from Jir
 ## What this app provides
 - **Jira Project Page**: "Release Notes Generator"
 - Fetches **Done** issues from a Sprint
-- Groups issues into release sections
+- Groups issues into release sections (new features, enhancements, bugs)
 - Creates a **Confluence draft page**
 - Uses **OpenAI** for summarization and classification
 

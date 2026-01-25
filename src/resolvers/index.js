@@ -6,7 +6,10 @@ const resolver = new Resolver();
 resolver.define("generateReleaseNotes", async ({ payload }) => {
   const sprintId = Number(payload.sprintId);
   const useAI = Boolean(payload?.useAI); // ✅ toggle AI mode
-  const siteBaseUrl = "https://theproblemlab.atlassian.net"; // change if needed
+
+  // Site base URL - can be configured via JIRA_SITE_URL environment variable
+  // Defaults to theproblemlab instance for backward compatibility
+  const siteBaseUrl = process.env.JIRA_SITE_URL || "https://theproblemlab.atlassian.net";
 
   if (!sprintId || Number.isNaN(sprintId)) {
     throw new Error("Invalid Sprint ID. Please enter a number.");
@@ -118,6 +121,7 @@ resolver.define("generateReleaseNotes", async ({ payload }) => {
     parentPageId,
     title,
     adfBody,
+    siteBaseUrl,
   });
 
   return {
@@ -238,7 +242,7 @@ async function getConfluenceSpaceId(spaceKey) {
 }
 
 // -------------------- ✅ STEP 3B: Confluence create page (V2) --------------------
-async function createConfluencePage({ spaceKey, parentPageId, title, adfBody }) {
+async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, siteBaseUrl }) {
   const spaceId = await getConfluenceSpaceId(spaceKey);
 
   const body = {
@@ -271,7 +275,8 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody }) 
   const pageId = created?.id || null;
 
   // Build URL (v2 may return different link shapes depending on rollout)
-  const base = "https://theproblemlab.atlassian.net/wiki";
+  // Uses the siteBaseUrl from environment to support multi-tenant deployments
+  const base = `${siteBaseUrl}/wiki`;
   const webui =
     created?._links?.webui ||
     created?.links?.webui ||
@@ -353,7 +358,14 @@ ${JSON.stringify(tickets, null, 2)}
 
 async function callOpenAIJson(prompt) {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("Missing OPENAI_API_KEY Forge variable");
+
+  // Validate API key exists and has correct format (OpenAI keys start with 'sk-')
+  if (!apiKey) {
+    throw new Error("Missing OPENAI_API_KEY Forge variable");
+  }
+  if (!apiKey.startsWith('sk-')) {
+    throw new Error("Invalid OPENAI_API_KEY format. OpenAI API keys must start with 'sk-'");
+  }
 
   const resp = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",

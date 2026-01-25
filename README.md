@@ -6,7 +6,7 @@ A private Atlassian Forge app that generates sprint-based release notes from Jir
 
 ## What this app provides
 - **Jira Project Page**: "Release Notes Generator"
-- Fetches **Done** issues from a Sprint
+- Fetches issues from a Sprint where **"Release Notes Required" = Yes** (regardless of status)
 - Groups issues into release sections (new features, enhancements, bugs)
 - Creates a **Confluence draft page**
 - Uses **OpenAI** for summarization and classification
@@ -59,6 +59,7 @@ forge register
 ## Configure environment variables
 This app requires an OpenAI API key to be configured as a Forge variable.
 
+### Required: OpenAI API Key
 Set it for development:
 ```bash
 forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment development
@@ -67,6 +68,12 @@ forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment developme
 (Optional) If deploying to production later:
 ```bash
 forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment production
+```
+
+### Optional: Custom Jira Site URL
+By default, the app uses `https://theproblemlab.atlassian.net`. To use a different Atlassian instance:
+```bash
+forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development
 ```
 
 ---
@@ -107,11 +114,15 @@ External API access:
 ---
 
 ## Common issues
-### Missing OpenAI API key
+### Missing or invalid OpenAI API key
 If you see errors related to OpenAI:
 ```bash
 forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment development
 ```
+**Note**: OpenAI API keys must start with `sk-`. The app validates this format and will error if the key is invalid.
+
+### No tickets found in release notes
+Ensure your Jira tickets have the custom field **"Release Notes Required"** set to **"Yes"**. The app only includes tickets explicitly marked for release notes, regardless of their status (To Do, In Progress, Done, etc.).
 
 ### Permission or 401/403 errors
 If scopes were updated in `manifest.yml`:

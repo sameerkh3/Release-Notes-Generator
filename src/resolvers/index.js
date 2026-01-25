@@ -12,9 +12,10 @@ resolver.define("generateReleaseNotes", async ({ payload }) => {
     throw new Error("Invalid Sprint ID. Please enter a number.");
   }
 
-  // Filter by sprint, status, and "Release Notes Required" custom field
+  // Filter by sprint and "Release Notes Required" custom field
   // Only include tickets where Release Notes Required = Yes (excludes No and blank/null values)
-  const jql = `Sprint = ${sprintId} AND statusCategory = Done AND "Release Notes Required" = Yes ORDER BY key ASC`;
+  // Tickets from ANY status (To Do, In Progress, Done, etc.) are included
+  const jql = `Sprint = ${sprintId} AND "Release Notes Required" = Yes ORDER BY key ASC`;
 
   // ✅ Use the new endpoint
   // Include customfield_10114 (Release Notes Required) for visibility/debugging

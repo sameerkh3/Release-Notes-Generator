@@ -14,6 +14,8 @@ yarn-error.log*
 *.swp
 *.swo
 .claude/
+AGENTS.md
+PLAN.md
 
 # OS
 .DS_Store

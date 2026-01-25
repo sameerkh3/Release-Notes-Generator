@@ -12,11 +12,14 @@ resolver.define("generateReleaseNotes", async ({ payload }) => {
     throw new Error("Invalid Sprint ID. Please enter a number.");
   }
 
-  const jql = `Sprint = ${sprintId} AND statusCategory = Done ORDER BY key ASC`;
+  // Filter by sprint, status, and "Release Notes Required" custom field
+  // Only include tickets where Release Notes Required = Yes (excludes No and blank/null values)
+  const jql = `Sprint = ${sprintId} AND statusCategory = Done AND "Release Notes Required" = Yes ORDER BY key ASC`;
 
   // ✅ Use the new endpoint
+  // Include customfield_10114 (Release Notes Required) for visibility/debugging
   const res = await api.asApp().requestJira(
-    route`/rest/api/3/search/jql?jql=${jql}&fields=summary,description,components,issuetype`
+    route`/rest/api/3/search/jql?jql=${jql}&fields=summary,description,components,issuetype,customfield_10114`
   );
 
   if (!res.ok) {

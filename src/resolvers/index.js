@@ -34,9 +34,16 @@ resolver.define("generateReleaseNotes", async ({ payload }) => {
   const sprintId = Number(payload.sprintId);
   const useAI = Boolean(payload?.useAI); // ✅ toggle AI mode
 
-  // Site base URL - can be configured via JIRA_SITE_URL environment variable
-  // Defaults to theproblemlab instance for backward compatibility
-  const siteBaseUrl = process.env.JIRA_SITE_URL || "https://theproblemlab.atlassian.net";
+  // Site base URL - REQUIRED environment variable for Jira instance URL
+  const siteBaseUrl = process.env.JIRA_SITE_URL;
+
+  // Validate required environment variable
+  if (!siteBaseUrl) {
+    throw new Error(
+      'JIRA_SITE_URL environment variable is required. ' +
+      'Please set it using: forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development'
+    );
+  }
 
   // Validate required fields
   if (!pageTitle) {

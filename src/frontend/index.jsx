@@ -103,14 +103,13 @@ const App = () => {
         <Stack space="space.400">
           {/* Header Section */}
           <Stack space="space.200">
-            <Heading as="h1" size="large">AI-powered Release Notes from your Jira sprints</Heading>
+            <Heading as="h1" size="large">AI-powered Release Notes</Heading>
           </Stack>
 
           {/* Form Fields */}
           <Stack space="space.300">
             {/* Page Title - Required field for custom Confluence page title */}
             <Stack space="space.100">
-              <Text weight="bold">Release Notes Title</Text>
               <Text>Enter a title for your Confluence release notes page.</Text>
               <Textfield
                 name="pageTitle"
@@ -122,7 +121,6 @@ const App = () => {
 
             {/* Sprint ID */}
             <Stack space="space.100">
-              <Text weight="bold">Sprint ID</Text>
               <Text>Enter Sprint ID from sprint URL or sprint metadata.</Text>
               <Textfield
                 name="sprintId"
@@ -134,7 +132,6 @@ const App = () => {
 
             {/* Space Key */}
             <Stack space="space.100">
-              <Text weight="bold">Confluence Space Key</Text>
               <Text>Enter Confluence Space Key from the URL like /wiki/spaces/RN → Space Key is RN.</Text>
               <Textfield
                 name="spaceKey"
@@ -146,8 +143,7 @@ const App = () => {
 
             {/* Parent Page ID */}
             <Stack space="space.100">
-              <Text weight="bold">Confluence Parent Page ID (Optional)</Text>
-              <Text>Enter Parent Page ID from the URL like /pages/123456. Leave empty to create at space root.</Text>
+              <Text> Enter Confluence Parent Page ID from the URL like /pages/123456. Leave empty to create at space root.</Text>
               <Textfield
                 name="parentPageId"
                 value={parentPageId}

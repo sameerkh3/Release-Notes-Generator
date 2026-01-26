@@ -5,7 +5,7 @@ A private Atlassian Forge app that generates sprint-based release notes from Jir
 ---
 
 ## What this app provides
-- **Jira Project Page**: "AI-powered Release Notes" - accessible from any Jira project
+- **Jira Project Page**: "AI-powered Release Notes" 
 - **Custom Page Titles**: Users can specify custom titles for their Confluence draft pages
 - **Smart Filtering**: Fetches only tickets marked with **"Release Notes Required" = Yes** (all statuses included)
 - **AI Classification**: Uses OpenAI (gpt-4.1-mini) to classify tickets into categories:

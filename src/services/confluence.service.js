@@ -130,8 +130,16 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
  * });
  */
 export async function createReleaseNotesPage({ sprintId, grouped, spaceKey, parentPageId }) {
-  // Site base URL - configurable via JIRA_SITE_URL environment variable
-  const siteBaseUrl = process.env.JIRA_SITE_URL || "https://theproblemlab.atlassian.net";
+  // Site base URL - REQUIRED environment variable for Jira instance URL
+  const siteBaseUrl = process.env.JIRA_SITE_URL;
+
+  // Validate required environment variable
+  if (!siteBaseUrl) {
+    throw new Error(
+      'JIRA_SITE_URL environment variable is required. ' +
+      'Please set it using: forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development'
+    );
+  }
 
   // Generate page title with current date
   const today = new Date().toISOString().slice(0, 10);

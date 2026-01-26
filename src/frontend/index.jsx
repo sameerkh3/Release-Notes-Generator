@@ -26,6 +26,8 @@ const backgroundStyles = xcss({
 });
 
 const App = () => {
+  // Form state: pageTitle is required for custom Confluence page titles
+  const [pageTitle, setPageTitle] = useState("");
   const [sprintId, setSprintId] = useState("");
   const [spaceKey, setSpaceKey] = useState("");
   const [parentPageId, setParentPageId] = useState("");
@@ -34,20 +36,32 @@ const App = () => {
 
   const isGenerating = status === "Generating…";
 
+  // Form validation: ensure all required fields are valid before allowing submission
   const canSubmit = useMemo(() => {
+    // Page title is required and must be non-empty
+    if (!pageTitle.trim()) return false;
+
+    // Sprint ID must be a positive integer
     const s = Number(sprintId);
     if (!sprintId || Number.isNaN(s) || s <= 0) return false;
+
+    // Space key is required and must be non-empty
     if (!spaceKey.trim()) return false;
+
+    // Parent page ID is optional, but if provided must be a valid number
     if (parentPageId.trim() && Number.isNaN(Number(parentPageId))) return false;
+
     return true;
-  }, [sprintId, spaceKey, parentPageId]);
+  }, [pageTitle, sprintId, spaceKey, parentPageId]);
 
   const onGenerate = async () => {
     setStatus("Generating…");
     setResult(null);
 
     try {
+      // Invoke backend resolver with user-provided page title
       const res = await invoke("generateReleaseNotes", {
+        pageTitle: pageTitle.trim(),
         sprintId: Number(sprintId),
         spaceKey: spaceKey.trim(),
         parentPageId: parentPageId.trim() ? Number(parentPageId) : null,
@@ -94,6 +108,18 @@ const App = () => {
 
           {/* Form Fields */}
           <Stack space="space.300">
+            {/* Page Title - Required field for custom Confluence page title */}
+            <Stack space="space.100">
+              <Text weight="bold">Release Notes Title</Text>
+              <Text>Enter a title for your Confluence release notes page.</Text>
+              <Textfield
+                name="pageTitle"
+                value={pageTitle}
+                onChange={(e) => setPageTitle(e.target.value)}
+                placeholder="e.g. Release Notes - Sprint 36 - January 2026"
+              />
+            </Stack>
+
             {/* Sprint ID */}
             <Stack space="space.100">
               <Text weight="bold">Sprint ID</Text>
@@ -120,7 +146,7 @@ const App = () => {
 
             {/* Parent Page ID */}
             <Stack space="space.100">
-              <Text weight="bold">Parent Page ID (Optional)</Text>
+              <Text weight="bold">Confluence Parent Page ID (Optional)</Text>
               <Text>Enter Parent Page ID from the URL like /pages/123456. Leave empty to create at space root.</Text>
               <Textfield
                 name="parentPageId"

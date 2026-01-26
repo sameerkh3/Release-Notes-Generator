@@ -4,12 +4,19 @@ import api, { route } from "@forge/api";
 const resolver = new Resolver();
 
 resolver.define("generateReleaseNotes", async ({ payload }) => {
+  // Extract and validate user-provided page title for Confluence draft
+  const pageTitle = (payload.pageTitle || "").trim();
   const sprintId = Number(payload.sprintId);
   const useAI = Boolean(payload?.useAI); // ✅ toggle AI mode
 
   // Site base URL - can be configured via JIRA_SITE_URL environment variable
   // Defaults to theproblemlab instance for backward compatibility
   const siteBaseUrl = process.env.JIRA_SITE_URL || "https://theproblemlab.atlassian.net";
+
+  // Validate required fields
+  if (!pageTitle) {
+    throw new Error("Page title is required. Please enter a custom title for the Confluence draft.");
+  }
 
   if (!sprintId || Number.isNaN(sprintId)) {
     throw new Error("Invalid Sprint ID. Please enter a number.");
@@ -107,8 +114,8 @@ resolver.define("generateReleaseNotes", async ({ payload }) => {
     };
   }
 
-  const today = new Date().toISOString().slice(0, 10);
-  const title = `Release Notes - Sprint ${sprintId} - ${today}`;
+  // Use custom title provided by user instead of auto-generated format
+  const title = pageTitle;
 
   const adfBody = buildReleaseNotesAdf({
     sprintId,

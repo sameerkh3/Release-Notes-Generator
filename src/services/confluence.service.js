@@ -88,12 +88,12 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
   const pageId = created?.id || null;
 
   // Build URL for draft page
-  // Confluence V2 API creates draft pages, so we construct the proper draft edit URL
+  // Confluence V2 API creates draft pages, which need to be accessed via edit mode
   const base = `${siteBaseUrl}/wiki`;
 
-  // For draft pages, use the page ID to construct a viewable/editable URL
-  // Format: /wiki/spaces/{spaceKey}/pages/{pageId}
-  const pageUrl = pageId ? `${base}/spaces/${spaceKey}/pages/${pageId}` : null;
+  // For draft pages, use the edit URL format to view/edit the draft
+  // Format: /wiki/spaces/{spaceKey}/pages/edit-v2/{pageId}
+  const pageUrl = pageId ? `${base}/spaces/${spaceKey}/pages/edit-v2/${pageId}` : null;
 
   return { pageId, pageUrl, spaceId };
 }

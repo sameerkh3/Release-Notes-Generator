@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { invoke } from "@forge/bridge";
-import ForgeReconciler, { Text, Textfield, Button, Stack, Box, Heading, xcss, Link } from "@forge/react";
+import ForgeReconciler, { Text, Textfield, Button, Stack, Box, Heading, xcss, Link, Spinner } from "@forge/react";
 
 // Elevated card styling with semi-transparent appearance
 const cardStyles = xcss({
@@ -142,7 +142,18 @@ const App = () => {
           </Button>
 
           {/* Status Messages */}
-          {status ? (
+          {isGenerating ? (
+            <Box
+              xcss={xcss({
+                padding: 'space.200',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              })}
+            >
+              <Spinner />
+            </Box>
+          ) : status && !isGenerating ? (
             <Box
               xcss={xcss({
                 padding: 'space.200',

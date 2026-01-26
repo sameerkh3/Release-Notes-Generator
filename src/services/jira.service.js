@@ -34,9 +34,16 @@ export async function fetchSprintTickets(sprintId) {
     throw new Error("Invalid Sprint ID. Please enter a number.");
   }
 
-  // Site base URL - configurable via JIRA_SITE_URL environment variable
-  // Defaults to theproblemlab instance for backward compatibility
-  const siteBaseUrl = process.env.JIRA_SITE_URL || "https://theproblemlab.atlassian.net";
+  // Site base URL - REQUIRED environment variable for Jira instance URL
+  const siteBaseUrl = process.env.JIRA_SITE_URL;
+
+  // Validate required environment variable
+  if (!siteBaseUrl) {
+    throw new Error(
+      'JIRA_SITE_URL environment variable is required. ' +
+      'Please set it using: forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development'
+    );
+  }
 
   // JQL query to filter by sprint and "Release Notes Required" custom field
   // Only include tickets where Release Notes Required = Yes (excludes No and blank/null values)

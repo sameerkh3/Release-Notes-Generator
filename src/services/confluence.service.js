@@ -87,17 +87,13 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
   const created = await res.json();
   const pageId = created?.id || null;
 
-  // Build URL (v2 may return different link shapes depending on rollout)
-  // Uses the siteBaseUrl from environment to support multi-tenant deployments
+  // Build URL for draft page
   const base = `${siteBaseUrl}/wiki`;
-  const webui =
-    created?._links?.webui ||
-    created?.links?.webui ||
-    created?._links?.tinyui ||
-    created?.links?.tinyui ||
-    null;
 
-  const pageUrl = webui ? `${base}${webui}` : pageId ? `${base}/pages/${pageId}` : null;
+  // For draft pages, use the webui link which provides the resumedraft.action URL
+  // This URL format allows editing draft pages created by Forge apps
+  const webuiLink = created?._links?.webui;
+  const pageUrl = webuiLink ? `${base}${webuiLink}` : null;
 
   return { pageId, pageUrl, spaceId };
 }
@@ -111,6 +107,7 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
  * @param {Object} options.grouped - Grouped tickets (new_features, enhancements, bugs)
  * @param {string} options.spaceKey - Confluence space key where page will be created
  * @param {number|null} options.parentPageId - Optional parent page ID
+ * @param {string} options.pageTitle - Custom page title provided by user
  * @returns {Promise<Object>} Confluence page details
  * @returns {boolean} return.created - Whether page was created
  * @returns {string} return.spaceKey - The space key
@@ -126,16 +123,24 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
  *   sprintId: 36,
  *   grouped: { new_features: [...], enhancements: [...], bugs: [...] },
  *   spaceKey: 'RN',
- *   parentPageId: 123456
+ *   parentPageId: 123456,
+ *   pageTitle: 'Release Notes - Sprint 36 - January 2026'
  * });
  */
-export async function createReleaseNotesPage({ sprintId, grouped, spaceKey, parentPageId }) {
-  // Site base URL - configurable via JIRA_SITE_URL environment variable
-  const siteBaseUrl = process.env.JIRA_SITE_URL || "https://theproblemlab.atlassian.net";
+export async function createReleaseNotesPage({ sprintId, grouped, spaceKey, parentPageId, pageTitle }) {
+  // Site base URL - REQUIRED environment variable for Jira instance URL
+  const siteBaseUrl = process.env.JIRA_SITE_URL;
 
-  // Generate page title with current date
-  const today = new Date().toISOString().slice(0, 10);
-  const title = `Release Notes - Sprint ${sprintId} - ${today}`;
+  // Validate required environment variable
+  if (!siteBaseUrl) {
+    throw new Error(
+      'JIRA_SITE_URL environment variable is required. ' +
+      'Please set it using: forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development'
+    );
+  }
+
+  // Use custom page title provided by user
+  const title = pageTitle;
 
   // Build ADF document content
   const adfBody = buildReleaseNotesAdf({

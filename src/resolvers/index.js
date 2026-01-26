@@ -29,10 +29,22 @@ const resolver = new Resolver();
  * @returns {Promise<Object>} Release notes result with tickets and optional Confluence page info
  */
 resolver.define("generateReleaseNotes", async ({ payload }) => {
+  // Extract and validate user-provided page title for Confluence draft
+  const pageTitle = (payload.pageTitle || "").trim();
   const sprintId = Number(payload.sprintId);
-  const useAI = Boolean(payload?.useAI);
+  const useAI = Boolean(payload?.useAI); // ✅ toggle AI mode
+
+  // Validate required fields
+  if (!pageTitle) {
+    throw new Error("Page title is required. Please enter a custom title for the Confluence draft.");
+  }
+
+  if (!sprintId || Number.isNaN(sprintId)) {
+    throw new Error("Invalid Sprint ID. Please enter a number.");
+  }
 
   // Fetch tickets from Jira sprint
+  // Filtered by sprint and "Release Notes Required" = Yes (handled in service layer)
   const tickets = await fetchSprintTickets(sprintId);
 
   // Non-AI mode: return raw ticket data
@@ -63,12 +75,13 @@ resolver.define("generateReleaseNotes", async ({ payload }) => {
     };
   }
 
-  // Create Confluence draft page with release notes
+  // Create Confluence page with release notes
   const confluence = await createReleaseNotesPage({
     sprintId,
     grouped,
     spaceKey,
     parentPageId,
+    pageTitle,
   });
 
   return {

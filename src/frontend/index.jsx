@@ -1,6 +1,29 @@
 import React, { useMemo, useState } from "react";
 import { invoke } from "@forge/bridge";
-import ForgeReconciler, { Text, Textfield, Button, Stack } from "@forge/react";
+import ForgeReconciler, { Text, Textfield, Button, Stack, Box, Heading, xcss, Link, Spinner } from "@forge/react";
+
+// Elevated card styling with semi-transparent appearance
+const cardStyles = xcss({
+  backgroundColor: 'color.background.neutral.subtle',
+  borderColor: 'color.border',
+  borderWidth: 'border.width',
+  borderStyle: 'solid',
+  borderRadius: 'border.radius.200',
+  padding: 'space.500',
+  boxShadow: 'elevation.shadow.raised',
+  maxWidth: '700px',
+});
+
+// Dark background container
+const backgroundStyles = xcss({
+  backgroundColor: 'color.background.inverse',
+  padding: 'space.600',
+  minHeight: '100vh',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  paddingTop: 'space.800',
+});
 
 const App = () => {
   const [sprintId, setSprintId] = useState("");
@@ -61,65 +84,93 @@ const App = () => {
   };
 
   return (
-    <Stack space="space.400" alignInline="start">
-      <Stack space="space.200" style={{ maxWidth: 600, width: "100%" }}>
+    <Box xcss={backgroundStyles}>
+      <Box xcss={cardStyles}>
+        <Stack space="space.400">
+          {/* Header Section */}
+          <Stack space="space.200">
+            <Heading as="h1" size="large">AI-powered Release Notes from your Jira sprints</Heading>
+          </Stack>
 
-  
-        {/* Sprint ID */}
-        <Stack space="space.100">
-          <Text>Enter Sprint ID from sprint URL or sprint metadata.</Text>
-          <Textfield
-            name="sprintId"
-            value={sprintId}
-            onChange={(e) => setSprintId(e.target.value)}
-            placeholder="e.g. 36"
-          />
-        </Stack>
-  
-        {/* Space Key */}
-        <Stack space="space.100">
-          <Text>Enter Confluence Space Key from the URL like /wiki/spaces/RN → Space Key is RN.</Text>
-          <Textfield
-            name="spaceKey"
-            value={spaceKey}
-            onChange={(e) => setSpaceKey(e.target.value)}
-            placeholder="e.g. RN"
-          />
-        </Stack>
-  
-        {/* Parent Page ID */}
-        <Stack space="space.100">
-          <Text>Enter Parent Page ID (optional) from the URL like /pages/123456. Leave empty to create at space root.</Text>
-          <Textfield
-            name="parentPageId"
-            value={parentPageId}
-            onChange={(e) => setParentPageId(e.target.value)}
-            placeholder="e.g. 123456"
-          />
-        </Stack>
-  
-        {/* Button */}
-        <Stack space="space.100" alignInline="start">
+          {/* Form Fields */}
+          <Stack space="space.300">
+            {/* Sprint ID */}
+            <Stack space="space.100">
+              <Text weight="bold">Sprint ID</Text>
+              <Text>Enter Sprint ID from sprint URL or sprint metadata.</Text>
+              <Textfield
+                name="sprintId"
+                value={sprintId}
+                onChange={(e) => setSprintId(e.target.value)}
+                placeholder="e.g. 36"
+              />
+            </Stack>
+
+            {/* Space Key */}
+            <Stack space="space.100">
+              <Text weight="bold">Confluence Space Key</Text>
+              <Text>Enter Confluence Space Key from the URL like /wiki/spaces/RN → Space Key is RN.</Text>
+              <Textfield
+                name="spaceKey"
+                value={spaceKey}
+                onChange={(e) => setSpaceKey(e.target.value)}
+                placeholder="e.g. RN"
+              />
+            </Stack>
+
+            {/* Parent Page ID */}
+            <Stack space="space.100">
+              <Text weight="bold">Parent Page ID (Optional)</Text>
+              <Text>Enter Parent Page ID from the URL like /pages/123456. Leave empty to create at space root.</Text>
+              <Textfield
+                name="parentPageId"
+                value={parentPageId}
+                onChange={(e) => setParentPageId(e.target.value)}
+                placeholder="e.g. 123456"
+              />
+            </Stack>
+          </Stack>
+
+          {/* Button */}
           <Button
             appearance="primary"
             onClick={onGenerate}
-            isDisabled={!canSubmit}
-            shouldFitContainer={false}
+            isDisabled={!canSubmit || isGenerating}
+            shouldFitContainer={true}
           >
-            Generate Release Notes
+            {isGenerating ? "Generating..." : "Generate Release Notes"}
           </Button>
+
+          {/* Status Messages */}
+          {isGenerating ? (
+            <Stack space="space.100" alignInline="center">
+              <Spinner />
+            </Stack>
+          ) : status && !isGenerating ? (
+            <Box
+              xcss={xcss({
+                padding: 'space.200',
+                backgroundColor: status.startsWith('Error')
+                  ? 'color.background.danger'
+                  : status.includes('Done')
+                  ? 'color.background.success'
+                  : 'color.background.information',
+                borderRadius: 'border.radius.100',
+              })}
+            >
+              <Text>{status}</Text>
+            </Box>
+          ) : null}
+
+          {/* Confluence Link */}
+          {confluenceUrl ? (
+            <Link href={confluenceUrl} openNewTab={true}>
+              {confluenceUrl}
+            </Link>
+          ) : null}
         </Stack>
-  
-        {status ? <Text>{status}</Text> : null}
-  
-        {confluenceUrl ? (
-          <Stack space="space.100">
-            <Text>Confluence draft link:</Text>
-            <Text>{confluenceUrl}</Text>
-          </Stack>
-        ) : null}
-      </Stack>
-    </Stack>
+      </Box>
+    </Box>
   );  
 };
 

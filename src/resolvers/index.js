@@ -81,6 +81,7 @@ resolver.define("generateReleaseNotes", async ({ payload }) => {
     grouped,
     spaceKey,
     parentPageId,
+    pageTitle,
   });
 
   return {

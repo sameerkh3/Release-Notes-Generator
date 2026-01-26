@@ -107,6 +107,7 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
  * @param {Object} options.grouped - Grouped tickets (new_features, enhancements, bugs)
  * @param {string} options.spaceKey - Confluence space key where page will be created
  * @param {number|null} options.parentPageId - Optional parent page ID
+ * @param {string} options.pageTitle - Custom page title provided by user
  * @returns {Promise<Object>} Confluence page details
  * @returns {boolean} return.created - Whether page was created
  * @returns {string} return.spaceKey - The space key
@@ -122,10 +123,11 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
  *   sprintId: 36,
  *   grouped: { new_features: [...], enhancements: [...], bugs: [...] },
  *   spaceKey: 'RN',
- *   parentPageId: 123456
+ *   parentPageId: 123456,
+ *   pageTitle: 'Release Notes - Sprint 36 - January 2026'
  * });
  */
-export async function createReleaseNotesPage({ sprintId, grouped, spaceKey, parentPageId }) {
+export async function createReleaseNotesPage({ sprintId, grouped, spaceKey, parentPageId, pageTitle }) {
   // Site base URL - REQUIRED environment variable for Jira instance URL
   const siteBaseUrl = process.env.JIRA_SITE_URL;
 
@@ -137,9 +139,8 @@ export async function createReleaseNotesPage({ sprintId, grouped, spaceKey, pare
     );
   }
 
-  // Generate page title with current date
-  const today = new Date().toISOString().slice(0, 10);
-  const title = `Release Notes - Sprint ${sprintId} - ${today}`;
+  // Use custom page title provided by user
+  const title = pageTitle;
 
   // Build ADF document content
   const adfBody = buildReleaseNotesAdf({

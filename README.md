@@ -211,7 +211,7 @@ src/
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `JIRA_SITE_URL` | Yes | - | Your Atlassian instance URL (e.g., `https://your-site.atlassian.net`) |
-| `OPENAI_API_KEY` | Yes | - | OpenAI API key (must start with `sk-`) |
+| `OPENAI_API_KEY` | Yes | - | OpenAI API key |
 | `OPENAI_MODEL` | No | `gpt-4.1-mini` | OpenAI model to use for classification |
 
 ### OpenAI Configuration

@@ -57,7 +57,20 @@ forge register
 ---
 
 ## Configure environment variables
-This app requires an OpenAI API key to be configured as a Forge variable.
+This app requires two environment variables to be configured as Forge variables.
+
+### Required: Jira Site URL
+Set your Atlassian instance URL:
+```bash
+forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development
+```
+
+**Important**: This variable is required. The app will not work without it. Replace `your-site` with your actual Atlassian site subdomain.
+
+(Optional) If deploying to production later:
+```bash
+forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment production
+```
 
 ### Required: OpenAI API Key
 Set it for development:
@@ -68,12 +81,6 @@ forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment developme
 (Optional) If deploying to production later:
 ```bash
 forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment production
-```
-
-### Optional: Custom Jira Site URL
-By default, the app uses `https://theproblemlab.atlassian.net`. To use a different Atlassian instance:
-```bash
-forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development
 ```
 
 ---
@@ -114,6 +121,13 @@ External API access:
 ---
 
 ## Common issues
+### Missing JIRA_SITE_URL environment variable
+If you see an error about JIRA_SITE_URL being required:
+```bash
+forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development
+```
+Replace `your-site` with your actual Atlassian site subdomain.
+
 ### Missing or invalid OpenAI API key
 If you see errors related to OpenAI:
 ```bash

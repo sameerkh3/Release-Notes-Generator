@@ -60,7 +60,7 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
 
   const body = {
     spaceId,
-    status: "current",
+    status: "draft",
     title,
     body: {
       representation: "atlas_doc_format",
@@ -87,11 +87,11 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
   const created = await res.json();
   const pageId = created?.id || null;
 
-  // Build URL for published page
-  // Confluence V2 API creates pages with status "current" (published)
+  // Build URL for draft page
+  // Confluence V2 API creates pages with status "draft"
   const base = `${siteBaseUrl}/wiki`;
 
-  // For published pages, use the standard page view URL
+  // For draft pages, use the standard page view URL (Confluence will show draft banner)
   // Format: /wiki/spaces/{spaceKey}/pages/{pageId}
   const pageUrl = pageId ? `${base}/spaces/${spaceKey}/pages/${pageId}` : null;
 

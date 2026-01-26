@@ -89,8 +89,7 @@ const App = () => {
         <Stack space="space.400">
           {/* Header Section */}
           <Stack space="space.200">
-            <Heading as="h1" size="large">Release Notes Generator</Heading>
-            <Text>Generate AI-powered release notes from your Jira sprints</Text>
+            <Heading as="h1" size="large">AI-powered Release Notes from your Jira sprints</Heading>
           </Stack>
 
           {/* Form Fields */}
@@ -161,10 +160,11 @@ const App = () => {
 
           {/* Confluence Link */}
           {confluenceUrl ? (
-            <Stack space="space.100">
-              <Text weight="bold">Confluence Draft Created</Text>
-              <Text>{confluenceUrl}</Text>
-            </Stack>
+            <Text>
+              <a href={confluenceUrl} target="_blank" rel="noopener noreferrer">
+                {confluenceUrl}
+              </a>
+            </Text>
           ) : null}
         </Stack>
       </Box>

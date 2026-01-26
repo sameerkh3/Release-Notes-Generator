@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { invoke } from "@forge/bridge";
-import ForgeReconciler, { Text, Textfield, Button, Stack, Box, Heading, xcss } from "@forge/react";
+import ForgeReconciler, { Text, Textfield, Button, Stack, Box, Heading, xcss, Link } from "@forge/react";
 
 // Elevated card styling with semi-transparent appearance
 const cardStyles = xcss({
@@ -160,11 +160,9 @@ const App = () => {
 
           {/* Confluence Link */}
           {confluenceUrl ? (
-            <Text>
-              <a href={confluenceUrl} target="_blank" rel="noopener noreferrer">
-                {confluenceUrl}
-              </a>
-            </Text>
+            <Link href={confluenceUrl} openNewTab={true}>
+              {confluenceUrl}
+            </Link>
           ) : null}
         </Stack>
       </Box>

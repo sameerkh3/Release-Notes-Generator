@@ -87,17 +87,13 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
   const created = await res.json();
   const pageId = created?.id || null;
 
-  // Build URL (v2 may return different link shapes depending on rollout)
-  // Uses the siteBaseUrl from environment to support multi-tenant deployments
+  // Build URL for draft page
+  // Confluence V2 API creates draft pages, so we construct the proper draft edit URL
   const base = `${siteBaseUrl}/wiki`;
-  const webui =
-    created?._links?.webui ||
-    created?.links?.webui ||
-    created?._links?.tinyui ||
-    created?.links?.tinyui ||
-    null;
 
-  const pageUrl = webui ? `${base}${webui}` : pageId ? `${base}/pages/${pageId}` : null;
+  // For draft pages, use the page ID to construct a viewable/editable URL
+  // Format: /wiki/spaces/{spaceKey}/pages/{pageId}
+  const pageUrl = pageId ? `${base}/spaces/${spaceKey}/pages/${pageId}` : null;
 
   return { pageId, pageUrl, spaceId };
 }

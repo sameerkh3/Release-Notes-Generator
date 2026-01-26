@@ -88,12 +88,12 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
   const pageId = created?.id || null;
 
   // Build URL for draft page
-  // Confluence V2 API creates pages with status "draft"
   const base = `${siteBaseUrl}/wiki`;
 
-  // For draft pages, use the standard page view URL (Confluence will show draft banner)
-  // Format: /wiki/spaces/{spaceKey}/pages/{pageId}
-  const pageUrl = pageId ? `${base}/spaces/${spaceKey}/pages/${pageId}` : null;
+  // For draft pages, use the webui link which provides the resumedraft.action URL
+  // This URL format allows editing draft pages created by Forge apps
+  const webuiLink = created?._links?.webui;
+  const pageUrl = webuiLink ? `${base}${webuiLink}` : null;
 
   return { pageId, pageUrl, spaceId };
 }

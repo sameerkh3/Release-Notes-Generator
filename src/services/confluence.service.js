@@ -87,8 +87,9 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
   const created = await res.json();
   const pageId = created?.id || null;
 
-  // Build URL for draft page
-  const base = `${siteBaseUrl}/wiki`;
+  // Build URL for draft page using the base URL from Confluence API response
+  // This ensures we always have the correct protocol (https://) and domain
+  const base = created?._links?.base || `${siteBaseUrl}/wiki`;
 
   // For draft pages, use the webui link which provides the resumedraft.action URL
   // This URL format allows editing draft pages created by Forge apps

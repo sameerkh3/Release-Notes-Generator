@@ -143,16 +143,9 @@ const App = () => {
 
           {/* Status Messages */}
           {isGenerating ? (
-            <Box
-              xcss={xcss({
-                padding: 'space.200',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              })}
-            >
+            <Stack space="space.100" alignInline="center">
               <Spinner />
-            </Box>
+            </Stack>
           ) : status && !isGenerating ? (
             <Box
               xcss={xcss({

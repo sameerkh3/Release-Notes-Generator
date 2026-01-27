@@ -47,7 +47,7 @@ async function getConfluenceSpaceId(spaceKey) {
  * @param {number|null} options.parentPageId - Optional parent page ID
  * @param {string} options.title - Page title
  * @param {Object} options.adfBody - ADF document content
- * @param {string} options.siteBaseUrl - Base URL for the Atlassian site
+ * @param {string} options.siteBaseUrl - Base URL for the Atlassian site (fallback)
  * @returns {Promise<Object>} Created page details
  * @returns {string} return.pageId - The created page ID
  * @returns {string|null} return.pageUrl - URL to view the page
@@ -88,7 +88,8 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
   const pageId = created?.id || null;
 
   // Build URL for draft page using the base URL from Confluence API response
-  // This ensures we always have the correct protocol (https://) and domain
+  // Confluence API provides the base URL in _links.base field
+  // Falls back to siteBaseUrl + /wiki if API doesn't provide base
   const base = created?._links?.base || `${siteBaseUrl}/wiki`;
 
   // For draft pages, use the webui link which provides the resumedraft.action URL
@@ -129,16 +130,9 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, si
  * });
  */
 export async function createReleaseNotesPage({ sprintId, grouped, spaceKey, parentPageId, pageTitle }) {
-  // Site base URL - REQUIRED environment variable for Jira instance URL
-  const siteBaseUrl = process.env.JIRA_SITE_URL;
-
-  // Validate required environment variable
-  if (!siteBaseUrl) {
-    throw new Error(
-      'JIRA_SITE_URL environment variable is required. ' +
-      'Please set it using: forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development'
-    );
-  }
+  // Site base URL - environment variable for Jira instance URL
+  // Used as fallback if Confluence API doesn't provide base URL
+  const siteBaseUrl = process.env.JIRA_SITE_URL || 'https://your-site.atlassian.net';
 
   // Use custom page title provided by user
   const title = pageTitle;

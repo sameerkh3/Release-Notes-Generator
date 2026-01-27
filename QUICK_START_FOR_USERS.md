@@ -9,10 +9,10 @@
 - Click **"Get it now"** and select your site
 - Grant access to Jira and Confluence
 
-### 2. Get Your Environment Variables Ready
+### 2. Get Your OpenAI API Key Ready
 Contact the app owner (the person who sent you this) to configure:
-- Your Jira site URL (e.g., `https://your-company.atlassian.net`)
 - Your OpenAI API key (or use a shared company key)
+- Note: Site URL is automatically detected from your installation
 
 ### 3. Add the Custom Field (One-Time)
 In Jira → Settings → Issues → Custom fields:
@@ -58,7 +58,7 @@ Click the generated Confluence URL, review the draft, edit if needed, and publis
 ## Common Issues
 
 **"Missing environment variable"**
-→ Contact the app owner to set up your site URL and OpenAI key
+→ Contact the app owner to set up your OpenAI key
 
 **"Custom field not found"**
 → Create "Release Notes Required" field as described above

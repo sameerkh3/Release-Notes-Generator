@@ -28,8 +28,7 @@ Use this checklist to track your progress toward private marketplace distributio
   # Install on your test site
   forge install --site <your-test-site> --environment production
 
-  # Set production environment variables
-  forge variables set JIRA_SITE_URL "https://your-test-site.atlassian.net" --environment production
+  # Set production environment variable (site URL is auto-detected)
   forge variables set OPENAI_API_KEY "your-key" --environment production
   ```
 

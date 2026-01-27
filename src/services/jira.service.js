@@ -34,14 +34,16 @@ export async function fetchSprintTickets(sprintId) {
     throw new Error("Invalid Sprint ID. Please enter a number.");
   }
 
-  // Site base URL - REQUIRED environment variable for Jira instance URL
+  // Site base URL - environment variable for Jira instance URL
+  // NOTE: For multi-tenant marketplace distribution, each installation needs its own
+  // JIRA_SITE_URL configured. This should be set per installation environment.
   const siteBaseUrl = process.env.JIRA_SITE_URL;
 
-  // Validate required environment variable
+  // Validate environment variable
   if (!siteBaseUrl) {
     throw new Error(
       'JIRA_SITE_URL environment variable is required. ' +
-      'Please set it using: forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development'
+      'Please set it using: forge variables set JIRA_SITE_URL "https://your-site.atlassian.net"'
     );
   }
 

@@ -16,8 +16,9 @@ yarn-error.log*
 .claude/
 AGENTS.md
 
-# Plan files
+# Plan and distribution files
 PLAN*.md
+DISTRIBUTION.md
 
 # OS
 .DS_Store

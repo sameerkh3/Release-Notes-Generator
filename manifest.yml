@@ -1,4 +1,23 @@
 modules:
+  # ============================================================================
+  # MODULE TYPE CONFIGURATION
+  # ============================================================================
+  # Choose ONE of the module types below based on your deployment needs:
+  #
+  # Option 1: jira:projectPage (CURRENTLY ACTIVE)
+  #   - Appears in project sidebar for ALL projects site-wide
+  #   - Highly discoverable, all users can access
+  #   - Best for: Internal use, teams wanting easy access across all projects
+  #
+  # Option 2: jira:projectSettingsPage (COMMENTED OUT)
+  #   - Appears in Project Settings → Apps (per project)
+  #   - Admin-only access, must be enabled per project
+  #   - Best for: Marketplace distribution, controlled rollout, sensitive projects
+  #
+  # To switch: Comment out one module and uncomment the other, then redeploy.
+  # ============================================================================
+
+  # OPTION 1: Site-wide project page (visible in all project sidebars)
   jira:projectPage:
     - key: release-notes-generator-hello-world-project-page
       resource: main
@@ -6,6 +25,16 @@ modules:
         function: resolver
       render: native
       title: AI-powered Release Notes Drafter
+
+  # OPTION 2: Project-specific settings page (admin-only, per-project)
+  # Uncomment the section below and comment out jira:projectPage above to use this
+  # jira:projectSettingsPage:
+  #   - key: release-notes-generator-project-settings-page
+  #     resource: main
+  #     resolver:
+  #       function: resolver
+  #     render: native
+  #     title: AI-powered Release Notes Drafter
 
   function:
     - key: resolver

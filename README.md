@@ -5,7 +5,7 @@ A private Atlassian Forge app that generates sprint-based release notes from Jir
 ---
 
 ## What this app provides
-- **Jira Project Page**: "AI-powered Release Notes" - accessible from any Jira project
+- **Jira Integration**: "AI-powered Release Notes" - accessible from Jira projects (configurable as project page or project settings)
 - **Custom Page Titles**: Users can specify custom titles for their Confluence draft pages
 - **Smart Filtering**: Fetches only tickets marked with **"Release Notes Required" = Yes** (all statuses included)
 - **AI Classification**: Uses OpenAI (gpt-4.1-mini) to classify tickets into categories:
@@ -90,6 +90,30 @@ forge variables set OPENAI_API_KEY "YOUR_OPENAI_API_KEY" --environment productio
 
 ---
 
+## Configure module type (Optional)
+
+The app can be deployed in two modes:
+
+### Option 1: Project Page (Default - Currently Active)
+- Appears in **all project sidebars** site-wide
+- Accessible to all users
+- Best for: Internal use, easy access across all projects
+
+### Option 2: Project Settings Page
+- Appears in **Project Settings → Apps** (per-project basis)
+- Admin-only access
+- Best for: Marketplace distribution, controlled rollout
+
+To switch between modes:
+1. Edit `manifest.yml`
+2. Comment out the current module (jira:projectPage)
+3. Uncomment the alternative module (jira:projectSettingsPage)
+4. Redeploy the app
+
+See inline comments in `manifest.yml` for detailed instructions.
+
+---
+
 ## Deploy the app
 Deploy to the development environment:
 ```bash
@@ -108,26 +132,29 @@ During installation:
 - Select your Atlassian site
 - Choose Jira (and Confluence if prompted)
 
-After installation, open any **Jira project** and locate **AI-powered Release Notes** in the project navigation.
+After installation, access the app based on your module configuration:
+- **Project Page mode**: Open any Jira project → locate **AI-powered Release Notes** in the project sidebar
+- **Project Settings mode**: Open a Jira project → Project Settings → Apps → **AI-powered Release Notes**
 
 ---
 
 ## How to use
 
-1. Open any Jira project
-2. Navigate to **AI-powered Release Notes** in the project sidebar
-3. Fill in the required fields:
+1. Access the app:
+   - **Project Page mode**: Open any Jira project → **AI-powered Release Notes** in the project sidebar
+   - **Project Settings mode**: Open a Jira project → Project Settings → Apps → **AI-powered Release Notes**
+2. Fill in the required fields:
    - **Page Title**: Custom title for your Confluence draft (e.g., "Release Notes - Sprint 36 - January 2026")
    - **Sprint ID**: The numeric sprint ID (found in sprint URLs or metadata)
    - **Space Key**: Your Confluence space key (e.g., "RN" from `/wiki/spaces/RN`)
    - **Parent Page ID** (optional): Confluence page ID to nest the draft under
-4. Click **Generate Release Notes**
-5. The app will:
+3. Click **Generate Release Notes**
+4. The app will:
    - Fetch all tickets from the sprint marked with "Release Notes Required = Yes"
    - Use OpenAI to classify each ticket (new feature, enhancement, or bug)
    - Generate user-friendly summaries for each ticket
    - Create a Confluence draft page with formatted release notes
-6. Click the generated Confluence URL to review and edit the draft
+5. Click the generated Confluence URL to review and edit the draft
 
 **Note**: All generated pages are drafts. Review and publish manually when ready.
 

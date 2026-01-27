@@ -16,6 +16,14 @@ Use this checklist to track your progress toward private marketplace distributio
 
 ## Phase 2: Production Deployment
 
+### Configure Module Type
+
+- [ ] Choose module type for marketplace distribution
+  - [ ] **Recommended**: `jira:projectSettingsPage` (Project Settings → Apps, admin-only)
+  - [ ] **Alternative**: `jira:projectPage` (all project sidebars, all users)
+  - [ ] Edit `manifest.yml` to enable chosen module type (see inline comments)
+  - [ ] Document your choice for user guides
+
 ### Deploy to Production Environment
 
 - [ ] Deploy to production
@@ -33,7 +41,7 @@ Use this checklist to track your progress toward private marketplace distributio
   ```
 
 - [ ] Verify app works correctly on production
-  - [ ] Can access "AI-powered Release Notes" in Jira project
+  - [ ] Can access "AI-powered Release Notes" (check project sidebar OR Project Settings → Apps based on module type)
   - [ ] Can generate release notes successfully
   - [ ] Confluence draft page is created
   - [ ] All links work correctly

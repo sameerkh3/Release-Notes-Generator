@@ -210,9 +210,10 @@ src/
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `JIRA_SITE_URL` | Yes | - | Your Atlassian instance URL (e.g., `https://your-site.atlassian.net`) |
 | `OPENAI_API_KEY` | Yes | - | OpenAI API key |
 | `OPENAI_MODEL` | No | `gpt-4.1-mini` | OpenAI model to use for classification |
+
+**Note:** Site URL is automatically detected from the Atlassian installation context. No manual configuration needed for multi-tenant deployments.
 
 ### OpenAI Configuration
 
@@ -225,13 +226,6 @@ src/
 ---
 
 ## Common issues
-### Missing JIRA_SITE_URL environment variable
-If you see an error about JIRA_SITE_URL being required:
-```bash
-forge variables set JIRA_SITE_URL "https://your-site.atlassian.net" --environment development
-```
-Replace `your-site` with your actual Atlassian site subdomain.
-
 ### Missing or invalid OpenAI API key
 If you see errors related to OpenAI:
 ```bash

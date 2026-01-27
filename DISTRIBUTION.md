@@ -118,27 +118,24 @@ You should receive an email invitation to install the app. If not:
 4. Review permissions and click **"Grant access"**
 5. Wait for installation to complete
 
-### Step 3: Configure Environment Variables
+### Step 3: Configure OpenAI API Key
 
-**IMPORTANT**: The app requires two environment variables to function.
+**IMPORTANT**: The app requires an OpenAI API key to function.
 
 You have two options:
 
 #### Option A: Contact App Owner
-Ask the app owner to set these variables for your site through the Forge console.
+Ask the app owner to set the OpenAI API key for your site through the Forge console.
 
 #### Option B: Request Forge CLI Access (Advanced)
 If you have Forge CLI access with proper permissions:
 
 ```bash
-# Set your Jira site URL
-forge variables set --app <app-id> JIRA_SITE_URL "https://your-company.atlassian.net" --environment production
-
 # Set your OpenAI API key
 forge variables set --app <app-id> OPENAI_API_KEY "sk-your-openai-key" --environment production
 ```
 
-**Note**: You need the app owner to provide the `<app-id>`.
+**Note**: You need the app owner to provide the `<app-id>`. The site URL is automatically detected from your Atlassian installation.
 
 ### Step 4: Add Custom Field to Jira
 
@@ -168,8 +165,8 @@ The app requires a custom field called **"Release Notes Required"**.
 - Contact the app owner to verify your email is in the approved list
 
 ### "Missing environment variable" errors
-- Contact the app owner to set up `JIRA_SITE_URL` and `OPENAI_API_KEY`
-- These must be configured before the app will work
+- Contact the app owner to set up `OPENAI_API_KEY`
+- The site URL is automatically detected from your installation
 
 ### "Custom field not found"
 - Create the "Release Notes Required" custom field as described above

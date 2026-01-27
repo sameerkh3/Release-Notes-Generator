@@ -47,6 +47,7 @@ async function getConfluenceSpaceId(spaceKey) {
  * @param {number|null} options.parentPageId - Optional parent page ID
  * @param {string} options.title - Page title
  * @param {Object} options.adfBody - ADF document content
+ * @param {string} options.siteBaseUrl - Base URL for the Atlassian site (fallback)
  * @returns {Promise<Object>} Created page details
  * @returns {string} return.pageId - The created page ID
  * @returns {string|null} return.pageUrl - URL to view the page
@@ -54,7 +55,7 @@ async function getConfluenceSpaceId(spaceKey) {
  * @throws {Error} If page creation fails
  * @private
  */
-async function createConfluencePage({ spaceKey, parentPageId, title, adfBody }) {
+async function createConfluencePage({ spaceKey, parentPageId, title, adfBody, siteBaseUrl }) {
   const spaceId = await getConfluenceSpaceId(spaceKey);
 
   const body = {
@@ -87,14 +88,14 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody }) 
   const pageId = created?.id || null;
 
   // Build URL for draft page using the base URL from Confluence API response
-  // Confluence API always provides the base URL in _links.base field
-  // This enables multi-tenant support where each installation automatically uses its own site
-  const base = created?._links?.base;
+  // Confluence API provides the base URL in _links.base field
+  // Falls back to siteBaseUrl + /wiki if API doesn't provide base
+  const base = created?._links?.base || `${siteBaseUrl}/wiki`;
 
   // For draft pages, use the webui link which provides the resumedraft.action URL
   // This URL format allows editing draft pages created by Forge apps
   const webuiLink = created?._links?.webui;
-  const pageUrl = (base && webuiLink) ? `${base}${webuiLink}` : null;
+  const pageUrl = webuiLink ? `${base}${webuiLink}` : null;
 
   return { pageId, pageUrl, spaceId };
 }
@@ -129,6 +130,10 @@ async function createConfluencePage({ spaceKey, parentPageId, title, adfBody }) 
  * });
  */
 export async function createReleaseNotesPage({ sprintId, grouped, spaceKey, parentPageId, pageTitle }) {
+  // Site base URL - environment variable for Jira instance URL
+  // Used as fallback if Confluence API doesn't provide base URL
+  const siteBaseUrl = process.env.JIRA_SITE_URL || 'https://your-site.atlassian.net';
+
   // Use custom page title provided by user
   const title = pageTitle;
 
@@ -145,6 +150,7 @@ export async function createReleaseNotesPage({ sprintId, grouped, spaceKey, pare
     parentPageId,
     title,
     adfBody,
+    siteBaseUrl,
   });
 
   return {

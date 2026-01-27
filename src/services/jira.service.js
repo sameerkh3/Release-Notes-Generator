@@ -34,6 +34,19 @@ export async function fetchSprintTickets(sprintId) {
     throw new Error("Invalid Sprint ID. Please enter a number.");
   }
 
+  // Site base URL - environment variable for Jira instance URL
+  // NOTE: For multi-tenant marketplace distribution, each installation needs its own
+  // JIRA_SITE_URL configured. This should be set per installation environment.
+  const siteBaseUrl = process.env.JIRA_SITE_URL;
+
+  // Validate environment variable
+  if (!siteBaseUrl) {
+    throw new Error(
+      'JIRA_SITE_URL environment variable is required. ' +
+      'Please set it using: forge variables set JIRA_SITE_URL "https://your-site.atlassian.net"'
+    );
+  }
+
   // JQL query to filter by sprint and "Release Notes Required" custom field
   // Only include tickets where Release Notes Required = Yes (excludes No and blank/null values)
   // Tickets from ANY status (To Do, In Progress, Done, etc.) are included
@@ -52,19 +65,6 @@ export async function fetchSprintTickets(sprintId) {
 
   const data = await res.json();
 
-  // Extract site base URL from first issue's self URL
-  // The self URL format is: https://site.atlassian.net/rest/api/3/issue/12345
-  // This enables multi-tenant support where each installation automatically uses its own site
-  let siteBaseUrl = null;
-  if (data.issues && data.issues.length > 0 && data.issues[0].self) {
-    const selfUrl = data.issues[0].self;
-    // Extract base URL: https://site.atlassian.net
-    const match = selfUrl.match(/^(https:\/\/[^\/]+)/);
-    if (match) {
-      siteBaseUrl = match[1];
-    }
-  }
-
   // Transform Jira issues into simplified ticket objects
   const tickets = (data.issues || []).map((issue) => {
     const key = issue.key;
@@ -75,8 +75,7 @@ export async function fetchSprintTickets(sprintId) {
       descriptionPlain: extractPlainText(issue.fields?.description).slice(0, 1500),
       components: (issue.fields?.components || []).map((c) => c.name),
       issueType: issue.fields?.issuetype?.name || "",
-      // Only include jiraUrl if we successfully extracted the site URL
-      jiraUrl: siteBaseUrl ? `${siteBaseUrl}/browse/${key}` : `https://your-site.atlassian.net/browse/${key}`,
+      jiraUrl: `${siteBaseUrl}/browse/${key}`,
     };
   });
 

@@ -1,11 +1,11 @@
 # Release Notes Generator (Forge)
 
-A private Atlassian Forge app that generates sprint-based release notes from Jira issues and (optionally) creates a Confluence draft page. It uses OpenAI to classify and rewrite release notes.
+A private Atlassian Forge app that generates sprint-based release notes from Jira issues and creates a Confluence draft page. It uses OpenAI to classify and rewrite release notes.
 
 ---
 
 ## What this app provides
-- **Jira Integration**: "AI-powered Release Notes" - accessible from Jira projects (configurable as project page or project settings)
+- **Jira Project Page**: "AI-powered Release Notes" 
 - **Custom Page Titles**: Users can specify custom titles for their Confluence draft pages
 - **Smart Filtering**: Fetches only tickets marked with **"Release Notes Required" = Yes** (all statuses included)
 - **AI Classification**: Uses OpenAI (gpt-4.1-mini) to classify tickets into categories:

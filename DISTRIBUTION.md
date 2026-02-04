@@ -11,7 +11,26 @@ This document explains how to distribute the Release Notes Generator app as a pr
 - App registered and tested in development
 - App deployed to production environment
 
-### Step 1: Deploy to Production
+### Step 1: Configure Module Type
+
+Before deploying, decide which module type to use:
+
+**Recommended for Marketplace: `jira:projectSettingsPage`**
+- Appears in Project Settings → Apps (per-project)
+- Admin-only access, better control for new users
+- Must be explicitly enabled per project
+
+**Alternative: `jira:projectPage`**
+- Appears in all project sidebars site-wide
+- All users can access immediately
+- Better for teams wanting instant availability
+
+To configure:
+1. Edit `manifest.yml`
+2. Comment/uncomment the desired module type (see inline comments)
+3. Proceed with deployment
+
+### Step 2: Deploy to Production
 
 ```bash
 # Deploy the latest version to production
@@ -21,13 +40,13 @@ forge deploy --environment production
 forge install --site <your-test-site> --environment production --upgrade
 ```
 
-### Step 2: Access Atlassian Developer Console
+### Step 3: Access Atlassian Developer Console
 
 1. Go to: https://developer.atlassian.com/console/myapps/
 2. Click on your app: "release-notes-generator"
 3. Navigate to the **Distribution** tab
 
-### Step 3: Configure Private Distribution
+### Step 4: Configure Private Distribution
 
 1. In the Distribution tab, click **"Distribute via Marketplace"**
 2. Fill in the required marketplace information:
@@ -66,7 +85,7 @@ forge install --site <your-test-site> --environment production --upgrade
 #### Pricing
 - Select: **Free**
 
-### Step 4: Set Distribution to Private
+### Step 5: Set Distribution to Private
 
 1. In the **Distribution settings**, choose **"Private"**
 2. Add email addresses of colleagues who can install:
@@ -75,13 +94,13 @@ forge install --site <your-test-site> --environment production --upgrade
    - etc.
 3. Only these invited users will see the app in the marketplace
 
-### Step 5: Submit for Review
+### Step 6: Submit for Review
 
 1. Click **"Submit for review"**
 2. Atlassian will review your app (usually 3-5 business days)
 3. You'll receive email notifications about approval status
 
-### Step 6: Managing Access
+### Step 7: Managing Access
 
 After approval, you can manage access:
 
@@ -151,9 +170,20 @@ The app requires a custom field called **"Release Notes Required"**.
 
 ### Step 5: Start Using
 
+Access the app based on the module type configured by the app owner:
+
+**If using Project Page mode (default):**
 1. Open any Jira project
 2. Look for **"AI-powered Release Notes"** in the project sidebar
 3. Fill in the form and generate your first release notes!
+
+**If using Project Settings mode:**
+1. Open a Jira project where you have admin access
+2. Go to Project Settings → Apps
+3. Look for **"AI-powered Release Notes"**
+4. Fill in the form and generate your first release notes!
+
+**Note**: Ask the app owner which mode is configured for your installation.
 
 ---
 

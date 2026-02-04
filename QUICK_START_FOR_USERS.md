@@ -28,8 +28,18 @@ In Jira → Settings → Issues → Custom fields:
 In your sprint, set "Release Notes Required" = **Yes** for tickets you want included.
 
 ### Step 2: Open the App
+The app location depends on how it was configured by your admin:
+
+**Option A: Project Page (Most Common)**
 1. Go to any Jira project
 2. Find **"AI-powered Release Notes"** in the left sidebar
+
+**Option B: Project Settings Page**
+1. Go to a Jira project (where you have admin access)
+2. Click Project Settings → Apps
+3. Find **"AI-powered Release Notes"**
+
+**Not sure which one?** Ask your app administrator or try both locations.
 
 ### Step 3: Fill in the Form
 - **Page Title**: e.g., "Release Notes - Sprint 36 - January 2026"

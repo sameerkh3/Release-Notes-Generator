@@ -1,0 +1,13 @@
+# CODEOWNERS file
+# This file defines individuals or teams responsible for code in this repository.
+# Code owners are automatically requested for review when someone opens a pull request.
+
+# Default owner for everything in the repo
+# This ensures you are notified of all changes
+*       @sameerkh3
+
+# Specific ownership for critical files
+/manifest.yml                           @sameerkh3
+/src/services/*.js                      @sameerkh3
+/.github/workflows/*                    @sameerkh3
+/package.json                           @sameerkh3

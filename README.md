@@ -415,3 +415,8 @@ This is a private/internal app. For bug reports or feature requests:
 - All pages are created as **drafts** - review before publishing
 - The app uses **gpt-4.1-mini** for cost efficiency
 - Batch size of 12 tickets balances speed and token limits
+
+---
+
+## Test Change
+This is a test change to verify CODEOWNERS functionality.
